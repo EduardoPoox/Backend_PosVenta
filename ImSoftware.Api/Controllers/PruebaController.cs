@@ -11,15 +11,32 @@ namespace ImSoftware.Api.Controllers
     public class PruebaController : ControllerBase
     {
         [HttpGet]
-        public IEnumerable<PruebaDTO> GetPruebas()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<PruebaDTO>> GetPruebas()
         {
-            return PruebaStore.PruebaList;
+            return  Ok(PruebaStore.PruebaList);
         }
 
         [HttpGet("id:int")]
-        public PruebaDTO GetPrueba(int Id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<PruebaDTO> GetPrueba(int Id)
         {
-            return PruebaStore.PruebaList.FirstOrDefault(p => p.Id == Id);
+            if (Id==0)
+            {
+                return BadRequest();
+            }
+
+            var prueba = PruebaStore.PruebaList.FirstOrDefault(p => p.Id == Id);
+
+            if (Id== null)
+            {
+                return NotFound();
+            }
+
+            return Ok(prueba);
+
         }
     }
 }
